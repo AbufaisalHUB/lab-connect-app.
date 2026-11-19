@@ -1,0 +1,12 @@
+{
+  "appId": "ps.medicare.labconnect",
+  "appName": "تواصل المختبر",
+  "webDir": "www",
+  "bundledWebRuntime": false,
+  "server": {
+    "androidScheme": "https"
+  },
+  "android": {
+    "allowMixedContent": true
+  }
+}
