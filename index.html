@@ -1,0 +1,870 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+  <title>تواصل المختبر وحجز السحب المنزلي</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700;800&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --primary: #0f766e;
+      --primary-dark: #115e59;
+      --primary-light: #ccfbf1;
+      --accent: #0284c7;
+      --danger: #dc2626;
+      --danger-light: #fee2e2;
+      --warning: #d97706;
+      --warning-light: #fef3c7;
+      --success: #16a34a;
+      --success-light: #dcfce7;
+      --bg: #f1f5f9;
+      --card: #ffffff;
+      --text: #0f172a;
+      --muted: #64748b;
+      --border: #e2e8f0;
+      --radius: 14px;
+      --shadow: 0 4px 14px rgba(15, 23, 42, 0.06);
+    }
+    * { box-sizing: border-box; font-family: 'Cairo', sans-serif; -webkit-tap-highlight-color: transparent; }
+    body { margin: 0; background: var(--bg); color: var(--text); padding-bottom: 85px; }
+
+    /* Header */
+    header {
+      background: linear-gradient(135deg, var(--primary-dark), var(--primary));
+      color: #fff;
+      padding: 16px 18px;
+      position: sticky;
+      top: 0;
+      z-index: 50;
+      box-shadow: 0 2px 10px rgba(0,0,0,0.12);
+    }
+    .header-top { display: flex; justify-content: space-between; align-items: center; gap: 10px; flex-wrap: wrap; }
+    .brand { display: flex; align-items: center; gap: 10px; }
+    .brand-icon {
+      width: 42px; height: 42px; border-radius: 12px;
+      background: rgba(255,255,255,0.18);
+      display: flex; align-items: center; justify-content: center;
+      font-size: 22px;
+    }
+    .brand h1 { margin: 0; font-size: 1.15rem; font-weight: 800; }
+    .brand p { margin: 0; font-size: 0.78rem; opacity: 0.9; }
+
+    .role-switcher {
+      display: flex; align-items: center; gap: 6px;
+      background: rgba(255,255,255,0.15);
+      padding: 4px; border-radius: 10px;
+    }
+    .role-btn {
+      border: none; background: transparent; color: #fff;
+      padding: 6px 10px; border-radius: 8px; font-size: 0.8rem;
+      font-weight: 700; cursor: pointer; transition: 0.2s;
+    }
+    .role-btn.active { background: #fff; color: var(--primary-dark); }
+
+    /* Stats Bar */
+    .stats-bar {
+      display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px;
+      max-width: 960px; margin: 14px auto 0; padding: 0 14px;
+    }
+    .stat-card {
+      background: var(--card); border-radius: var(--radius); padding: 12px;
+      box-shadow: var(--shadow); border: 1px solid var(--border); text-align: center;
+    }
+    .stat-num { font-size: 1.35rem; font-weight: 800; color: var(--primary); line-height: 1.2; }
+    .stat-label { font-size: 0.78rem; color: var(--muted); font-weight: 600; }
+
+    /* Container */
+    main { max-width: 960px; margin: 14px auto; padding: 0 14px; }
+    .tab-section { display: none; animation: fadeIn 0.2s ease; }
+    .tab-section.active { display: block; }
+    @keyframes fadeIn { from { opacity: 0; transform: translateY(4px); } to { opacity: 1; transform: translateY(0); } }
+
+    /* Cards & Forms */
+    .card {
+      background: var(--card); border-radius: var(--radius); padding: 16px;
+      box-shadow: var(--shadow); border: 1px solid var(--border); margin-bottom: 14px;
+    }
+    .card-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px; gap: 8px; flex-wrap: wrap; }
+    .card-title { margin: 0; font-size: 1.02rem; font-weight: 800; color: var(--text); display: flex; align-items: center; gap: 6px; }
+
+    .form-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(210px, 1fr)); gap: 10px; }
+    .form-group { display: flex; flex-direction: column; gap: 4px; margin-bottom: 10px; }
+    label { font-size: 0.82rem; font-weight: 700; color: var(--text); }
+    input, select, textarea {
+      width: 100%; padding: 10px 12px; border-radius: 10px;
+      border: 1.5px solid var(--border); font-size: 0.9rem; background: #fff; color: var(--text);
+      transition: 0.2s;
+    }
+    input:focus, select:focus, textarea:focus { outline: none; border-color: var(--primary); box-shadow: 0 0 0 3px var(--primary-light); }
+
+    /* Buttons */
+    .btn {
+      border: none; border-radius: 10px; padding: 10px 14px;
+      font-size: 0.86rem; font-weight: 700; cursor: pointer;
+      display: inline-flex; align-items: center; justify-content: center; gap: 6px;
+      transition: 0.15s;
+    }
+    .btn:active { transform: scale(0.98); }
+    .btn-primary { background: var(--primary); color: #fff; }
+    .btn-primary:hover { background: var(--primary-dark); }
+    .btn-accent { background: var(--accent); color: #fff; }
+    .btn-danger { background: var(--danger); color: #fff; }
+    .btn-outline { background: #fff; border: 1.5px solid var(--border); color: var(--text); }
+    .btn-outline:hover { background: #f8fafc; }
+    .btn-sm { padding: 6px 10px; font-size: 0.78rem; border-radius: 8px; }
+
+    .quick-templates { display: flex; gap: 6px; flex-wrap: wrap; margin-bottom: 10px; }
+    .chip {
+      background: #f1f5f9; border: 1px solid var(--border); border-radius: 20px;
+      padding: 5px 11px; font-size: 0.78rem; font-weight: 600; cursor: pointer; color: var(--text);
+    }
+    .chip:hover, .chip.active { background: var(--primary-light); border-color: var(--primary); color: var(--primary-dark); }
+
+    /* Messages */
+    .msg-item {
+      border: 1.5px solid var(--border); border-radius: 12px; padding: 13px;
+      margin-bottom: 10px; background: #fff; position: relative;
+    }
+    .msg-item.urgent { border-right: 5px solid var(--danger); background: #fffafa; }
+    .msg-item.shift { border-right: 5px solid var(--accent); }
+    .msg-item.normal { border-right: 5px solid var(--primary); }
+    .msg-meta { display: flex; justify-content: space-between; align-items: center; font-size: 0.76rem; color: var(--muted); margin-bottom: 6px; flex-wrap: wrap; gap: 6px; }
+    .badge { padding: 3px 9px; border-radius: 20px; font-size: 0.73rem; font-weight: 700; }
+    .badge-urgent { background: var(--danger-light); color: var(--danger); }
+    .badge-shift { background: #e0f2fe; color: var(--accent); }
+    .badge-normal { background: var(--primary-light); color: var(--primary-dark); }
+    .badge-pending { background: var(--warning-light); color: var(--warning); }
+    .badge-assigned { background: #e0f2fe; color: var(--accent); }
+    .badge-done { background: var(--success-light); color: var(--success); }
+
+    .msg-body { font-size: 0.93rem; line-height: 1.55; margin: 6px 0 10px; font-weight: 600; }
+    .ack-list { display: flex; flex-wrap: wrap; gap: 5px; margin-top: 8px; padding-top: 8px; border-top: 1px dashed var(--border); font-size: 0.76rem; }
+    .ack-pill { background: var(--success-light); color: var(--success); padding: 2px 8px; border-radius: 12px; font-weight: 700; }
+    .replies-box { margin-top: 8px; background: #f8fafc; padding: 8px 10px; border-radius: 8px; font-size: 0.82rem; }
+    .reply-line { margin-bottom: 4px; }
+
+    /* Bookings */
+    .booking-card {
+      border: 1.5px solid var(--border); border-radius: 12px; padding: 14px;
+      margin-bottom: 10px; background: #fff;
+    }
+    .booking-top { display: flex; justify-content: space-between; align-items: flex-start; gap: 8px; flex-wrap: wrap; }
+    .booking-patient { font-size: 1rem; font-weight: 800; margin: 0; }
+    .booking-details { display: grid; grid-template-columns: repeat(auto-fit, minmax(170px, 1fr)); gap: 6px; margin: 10px 0; font-size: 0.83rem; color: #334155; }
+    .booking-actions { display: flex; gap: 6px; flex-wrap: wrap; align-items: center; padding-top: 10px; border-top: 1px solid var(--border); }
+
+    /* Staff List */
+    .staff-row {
+      display: flex; justify-content: space-between; align-items: center;
+      padding: 10px 12px; border: 1px solid var(--border); border-radius: 10px; margin-bottom: 8px;
+    }
+    .status-dot { width: 10px; height: 10px; border-radius: 50%; display: inline-block; margin-left: 6px; }
+    .dot-online { background: var(--success); }
+    .dot-field { background: var(--accent); }
+    .dot-off { background: var(--muted); }
+
+    /* Bottom Navigation */
+    nav.bottom-nav {
+      position: fixed; bottom: 0; left: 0; right: 0;
+      background: #fff; border-top: 1px solid var(--border);
+      display: grid; grid-template-columns: repeat(3, 1fr);
+      padding: 6px 4px; z-index: 60; box-shadow: 0 -2px 10px rgba(0,0,0,0.05);
+    }
+    .nav-item {
+      border: none; background: transparent; color: var(--muted);
+      display: flex; flex-direction: column; align-items: center; gap: 2px;
+      font-size: 0.76rem; font-weight: 700; cursor: pointer; padding: 6px; border-radius: 10px;
+    }
+    .nav-item.active { color: var(--primary); background: var(--primary-light); }
+    .nav-icon { font-size: 1.25rem; }
+
+    /* Print Modal & Receipt */
+    .modal-backdrop {
+      display: none; position: fixed; inset: 0; background: rgba(15,23,42,0.6);
+      z-index: 100; align-items: center; justify-content: center; padding: 14px;
+    }
+    .modal-backdrop.open { display: flex; }
+    .modal-box {
+      background: #fff; border-radius: 16px; max-width: 520px; width: 100%;
+      max-height: 90vh; overflow-y: auto; padding: 18px; box-shadow: 0 10px 30px rgba(0,0,0,0.25);
+    }
+    .receipt-box {
+      border: 2px dashed #94a3b8; border-radius: 12px; padding: 16px; background: #fff;
+    }
+    .receipt-header { text-align: center; border-bottom: 1.5px solid var(--border); padding-bottom: 10px; margin-bottom: 12px; }
+    .receipt-row { display: flex; justify-content: space-between; padding: 6px 0; border-bottom: 1px solid #f1f5f9; font-size: 0.88rem; }
+
+    /* Toast */
+    #toast {
+      position: fixed; top: 76px; left: 50%; transform: translateX(-50%);
+      background: #0f172a; color: #fff; padding: 10px 18px; border-radius: 30px;
+      font-size: 0.84rem; font-weight: 700; z-index: 200; opacity: 0; pointer-events: none; transition: 0.25s;
+    }
+    #toast.show { opacity: 1; }
+
+    @media print {
+      body * { visibility: hidden; }
+      #printArea, #printArea * { visibility: visible; }
+      #printArea {
+        position: fixed; left: 0; top: 0; width: 100%; background: #fff; padding: 20px;
+      }
+      .no-print { display: none !important; }
+    }
+  </style>
+</head>
+<body>
+
+<div id="toast">تم الحفظ بنجاح</div>
+
+<header>
+  <div class="header-top">
+    <div class="brand">
+      <div class="brand-icon">🧪</div>
+      <div>
+        <h1>تواصل المختبر والسحب المنزلي</h1>
+        <p id="activeUserLabel">الوضع الحالي: مشرف المختبر</p>
+      </div>
+    </div>
+    <div class="role-switcher">
+      <button class="role-btn active" id="btnRoleSup" onclick="switchRole('supervisor')">مشرف المختبر</button>
+      <button class="role-btn" id="btnRoleStaff" onclick="switchRole('staff')">موظف / مراسل</button>
+    </div>
+  </div>
+</header>
+
+<div class="stats-bar">
+  <div class="stat-card">
+    <div class="stat-num" id="statPending">0</div>
+    <div class="stat-label">طلبات بانتظار التعيين</div>
+  </div>
+  <div class="stat-card">
+    <div class="stat-num" id="statAssigned">0</div>
+    <div class="stat-label">قيد التنفيذ الميداني</div>
+  </div>
+  <div class="stat-card">
+    <div class="stat-num" id="statUnread">0</div>
+    <div class="stat-label">تعميمات بانتظار التأكيد</div>
+  </div>
+</div>
+
+<main>
+  <!-- TAB 1: COMMUNICATION -->
+  <section id="tab-comm" class="tab-section active">
+    <div class="card" id="composerCard">
+      <div class="card-header">
+        <h2 class="card-title">📢 إرسال تعميم أو تنبيه للفريق</h2>
+      </div>
+      <div class="quick-templates">
+        <span class="chip" onclick="useTemplate('urgent', 'تنبيه عاجل: يرجى تجهيز عينات المستعجل وإرسالها مع المراسل خلال 15 دقيقة.')">🚨 سحب مستعجل</span>
+        <span class="chip" onclick="useTemplate('shift', 'تذكير المناوبة: يرجى جرد أنابيب السحب ومستلزمات التعقيم قبل نهاية الدوام.')">📋 جرد نهاية الدوام</span>
+        <span class="chip" onclick="useTemplate('normal', 'تحديث إداري: تم تحديث جدول زيارات السحب المنزلي للفترة الصباحية.')">ℹ️ تحديث جدول</span>
+      </div>
+      <div class="form-grid">
+        <div class="form-group">
+          <label>نوع الرسالة</label>
+          <select id="msgType">
+            <option value="normal">تعميم عادي</option>
+            <option value="urgent">تنبيه عاجل 🚨</option>
+            <option value="shift">تحديث مناوبة 🔄</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <label>المستهدفون</label>
+          <select id="msgTarget">
+            <option value="الجميع">جميع موظفي المختبر</option>
+            <option value="فنيي السحب والمراسلين">فنيي السحب والمراسلين</option>
+            <option value="قسم الاستقبال">قسم الاستقبال</option>
+          </select>
+        </div>
+      </div>
+      <div class="form-group">
+        <label>نص الرسالة أو التعليمات</label>
+        <textarea id="msgText" rows="2" placeholder="اكتب تعليماتك للموظفين هنا..."></textarea>
+      </div>
+      <button class="btn btn-primary" onclick="sendMessage()">إرسال التعميم الآن</button>
+    </div>
+
+    <div class="card">
+      <div class="card-header">
+        <h2 class="card-title">💬 سجل التواصل والتنبيهات</h2>
+        <div class="quick-templates" style="margin:0;">
+          <span class="chip active" onclick="filterMessages('all', this)">الكل</span>
+          <span class="chip" onclick="filterMessages('urgent', this)">العاجل</span>
+          <span class="chip" onclick="filterMessages('shift', this)">المناوبات</span>
+        </div>
+      </div>
+      <div id="messagesList"></div>
+    </div>
+  </section>
+
+  <!-- TAB 2: HOME BLOOD DRAW BOOKING -->
+  <section id="tab-booking" class="tab-section">
+    <div class="card">
+      <div class="card-header">
+        <h2 class="card-title">🏠 تسجيل طلب سحب دم منزلي جديد</h2>
+      </div>
+      <div class="form-grid">
+        <div class="form-group">
+          <label>اسم المريض الكامل *</label>
+          <input type="text" id="bPatient" placeholder="مثال: أحمد محمود العلي" />
+        </div>
+        <div class="form-group">
+          <label>رقم الجوال *</label>
+          <input type="tel" id="bPhone" placeholder="059XXXXXXX" />
+        </div>
+        <div class="form-group">
+          <label>الحي / العنوان التفصيلي *</label>
+          <input type="text" id="bAddress" placeholder="الحي، الشارع، أقرب معلم" />
+        </div>
+        <div class="form-group">
+          <label>تاريخ الزيارة</label>
+          <input type="date" id="bDate" />
+        </div>
+        <div class="form-group">
+          <label>الفترة الزمنية</label>
+          <select id="bTime">
+            <option value="صباحاً (8:00 - 11:00)">صباحاً (8:00 - 11:00)</option>
+            <option value="ظهراً (11:00 - 2:00)">ظهراً (11:00 - 2:00)</option>
+            <option value="مساءً (4:00 - 8:00)">مساءً (4:00 - 8:00)</option>
+            <option value="زيارة مستعجلة فوراً">زيارة مستعجلة فوراً 🚨</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <label>شروط التحليل</label>
+          <select id="bFasting">
+            <option value="لا يشترط صيام">لا يشترط صيام</option>
+            <option value="صيام 8-12 ساعة">صيام 8-12 ساعة</option>
+            <option value="عينة عشوائية / بعد الأكل">عينة عشوائية / بعد الأكل</option>
+          </select>
+        </div>
+      </div>
+      <div class="form-group">
+        <label>التحاليل المطلوبة وملاحظات إضافية *</label>
+        <input type="text" id="bTests" placeholder="مثال: CBC, HbA1c, Lipid Profile, Vitamin D" />
+      </div>
+      <button class="btn btn-primary" onclick="addBooking()">➕ تأكيد وحفظ طلب السحب</button>
+    </div>
+
+    <div class="card">
+      <div class="card-header">
+        <h2 class="card-title">📋 قائمة طلبات السحب المنزلي</h2>
+        <div style="display:flex; gap:6px; flex-wrap:wrap;">
+          <button class="btn btn-outline btn-sm" onclick="printDailySchedule()">🖨️ طباعة جدول اليوم</button>
+          <button class="btn btn-outline btn-sm" onclick="exportBookingsCSV()">📥 تصدير Excel/CSV</button>
+        </div>
+      </div>
+      <div class="quick-templates">
+        <span class="chip active" onclick="filterBookings('all', this)">الكل</span>
+        <span class="chip" onclick="filterBookings('pending', this)">قيد الانتظار</span>
+        <span class="chip" onclick="filterBookings('assigned', this)">تم التعيين</span>
+        <span class="chip" onclick="filterBookings('done', this)">مكتمل</span>
+      </div>
+      <div id="bookingsList"></div>
+    </div>
+  </section>
+
+  <!-- TAB 3: TEAM & FUTURE IDEAS -->
+  <section id="tab-team" class="tab-section">
+    <div class="card">
+      <div class="card-header">
+        <h2 class="card-title">👥 جاهزية الطاقم والمراسلين</h2>
+      </div>
+      <div id="staffList"></div>
+    </div>
+
+    <div class="card">
+      <div class="card-header">
+        <h2 class="card-title">💡 مساحة الأفكار والتطوير المستقبلي</h2>
+      </div>
+      <p style="font-size:0.83rem; color:var(--muted); margin-top:0;">سجّل هنا أي ميزة تود إضافتها لاحقاً للتطبيق (مثل: تتبع GPS، إرسال النتائج PDF، باركود العينات):</p>
+      <div style="display:flex; gap:8px; margin-bottom:10px;">
+        <input type="text" id="ideaInput" placeholder="اكتب فكرة ميزة جديدة..." />
+        <button class="btn btn-primary" onclick="addIdea()">إضافة</button>
+      </div>
+      <div id="ideasList"></div>
+    </div>
+  </section>
+</main>
+
+<!-- Bottom Navigation -->
+<nav class="bottom-nav">
+  <button class="nav-item active" onclick="switchTab('comm', this)">
+    <span class="nav-icon">💬</span>
+    <span>التواصل والتنبيهات</span>
+  </button>
+  <button class="nav-item" onclick="switchTab('booking', this)">
+    <span class="nav-icon">🩸</span>
+    <span>حجز سحب منزلي</span>
+  </button>
+  <button class="nav-item" onclick="switchTab('team', this)">
+    <span class="nav-icon">👥</span>
+    <span>الفريق والأفكار</span>
+  </button>
+</nav>
+
+<!-- Receipt Print Modal -->
+<div class="modal-backdrop" id="receiptModal">
+  <div class="modal-box">
+    <div id="printArea">
+      <div class="receipt-box" id="receiptContent"></div>
+    </div>
+    <div class="no-print" style="display:flex; gap:8px; margin-top:14px; justify-content:flex-end; flex-wrap:wrap;">
+      <button class="btn btn-primary" onclick="window.print()">🖨️ طباعة / حفظ PDF</button>
+      <button class="btn btn-accent" id="btnCopyWhatsApp">📋 نسخ ملخص واتساب</button>
+      <button class="btn btn-outline" onclick="closeModal()">إغلاق</button>
+    </div>
+  </div>
+</div>
+
+<script>
+  const STORAGE_KEY = 'medicare_lab_app_v1';
+
+  const defaultData = {
+    role: 'supervisor',
+    currentStaffName: 'إسراء القطب',
+    staff: [
+      { id: 1, name: 'إسراء القطب', role: 'فنية مختبر', status: 'online' },
+      { id: 2, name: 'أسيل ملحم', role: 'فنية مختبر', status: 'online' },
+      { id: 3, name: 'بهاء', role: 'فني مختبر', status: 'field' },
+      { id: 4, name: 'عمار كرسوع', role: 'مراسل سحب منزلي', status: 'field' }
+    ],
+    messages: [
+      {
+        id: 101,
+        type: 'urgent',
+        target: 'الجميع',
+        sender: 'مشرف المختبر',
+        text: 'يرجى التأكد من حفظ عينات السحب المنزلي في الحافظة المبردة وتسليمها فور الوصول للاستقبال.',
+        time: 'اليوم 09:15 ص',
+        acks: ['إسراء القطب', 'عمار كرسوع'],
+        replies: [{ author: 'عمار كرسوع', text: 'تم الاستلام، الحافظة جاهزة.' }]
+      },
+      {
+        id: 102,
+        type: 'shift',
+        target: 'فنيي السحب والمراسلين',
+        sender: 'مشرف المختبر',
+        text: 'مناوبة السحب المنزلي المسائية اليوم ستكون بإشراف بهاء وعمار.',
+        time: 'اليوم 08:30 ص',
+        acks: ['بهاء'],
+        replies: []
+      }
+    ],
+    bookings: [
+      {
+        id: 501,
+        patient: 'سامر عبد الله الخطيب',
+        phone: '0599123456',
+        address: 'حي الإرسال - عمارة النور ط3',
+        date: new Date().toISOString().split('T')[0],
+        time: 'صباحاً (8:00 - 11:00)',
+        fasting: 'صيام 8-12 ساعة',
+        tests: 'CBC, FBS, Lipid Profile, Vitamin B12',
+        status: 'assigned',
+        assignee: 'عمار كرسوع'
+      },
+      {
+        id: 502,
+        patient: 'منى خليل جابر',
+        phone: '0568987654',
+        address: 'شارع القدس - قرب مسجد السلام',
+        date: new Date().toISOString().split('T')[0],
+        time: 'ظهراً (11:00 - 2:00)',
+        fasting: 'لا يشترط صيام',
+        tests: 'TSH, FT4, Ferritin',
+        status: 'pending',
+        assignee: ''
+      }
+    ],
+    ideas: [
+      'إضافة إشعارات فورية (Push Notifications) عند وصول طلب سحب منزلي جديد',
+      'إرسال رابط موقع المريض على خرائط جوجل للمراسل مباشرة',
+      'طباعة ملصق باركود للعينات المسحوبة منزلياً'
+    ]
+  };
+
+  let state = JSON.parse(localStorage.getItem(STORAGE_KEY)) || defaultData;
+  let currentMsgFilter = 'all';
+  let currentBookingFilter = 'all';
+
+  function saveState() {
+    localStorage.setItem(STORAGE_KEY, JSON.stringify(state));
+    updateStats();
+  }
+
+  function showToast(msg) {
+    const t = document.getElementById('toast');
+    t.textContent = msg;
+    t.classList.add('show');
+    setTimeout(() => t.classList.remove('show'), 2200);
+  }
+
+  function switchRole(role) {
+    state.role = role;
+    document.getElementById('btnRoleSup').classList.toggle('active', role === 'supervisor');
+    document.getElementById('btnRoleStaff').classList.toggle('active', role === 'staff');
+    document.getElementById('activeUserLabel').textContent =
+      role === 'supervisor' ? 'الوضع الحالي: مشرف المختبر' : `الوضع الحالي: موظف (${state.currentStaffName})`;
+    saveState();
+    renderAll();
+  }
+
+  function switchTab(tab, btn) {
+    document.querySelectorAll('.tab-section').forEach(s => s.classList.remove('active'));
+    document.getElementById('tab-' + tab).classList.add('active');
+    document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
+    btn.classList.add('active');
+  }
+
+  function updateStats() {
+    document.getElementById('statPending').textContent = state.bookings.filter(b => b.status === 'pending').length;
+    document.getElementById('statAssigned').textContent = state.bookings.filter(b => b.status === 'assigned').length;
+    document.getElementById('statUnread').textContent = state.messages.filter(m => m.acks.length < state.staff.length).length;
+  }
+
+  // Messages
+  function useTemplate(type, text) {
+    document.getElementById('msgType').value = type;
+    document.getElementById('msgText').value = text;
+  }
+
+  function sendMessage() {
+    const text = document.getElementById('msgText').value.trim();
+    if (!text) return showToast('يرجى كتابة نص الرسالة أولاً');
+    const type = document.getElementById('msgType').value;
+    const target = document.getElementById('msgTarget').value;
+    const now = new Date();
+    const timeStr = now.toLocaleTimeString('ar-EG', { hour: '2-digit', minute: '2-digit' });
+
+    state.messages.unshift({
+      id: Date.now(),
+      type,
+      target,
+      sender: state.role === 'supervisor' ? 'مشرف المختبر' : state.currentStaffName,
+      text,
+      time: 'اليوم ' + timeStr,
+      acks: [],
+      replies: []
+    });
+    document.getElementById('msgText').value = '';
+    saveState();
+    renderMessages();
+    showToast('تم إرسال التعميم للفريق');
+  }
+
+  function filterMessages(filter, el) {
+    currentMsgFilter = filter;
+    el.parentElement.querySelectorAll('.chip').forEach(c => c.classList.remove('active'));
+    el.classList.add('active');
+    renderMessages();
+  }
+
+  function toggleAck(id) {
+    const msg = state.messages.find(m => m.id === id);
+    const actor = state.role === 'supervisor' ? 'مشرف المختبر' : state.currentStaffName;
+    if (!msg.acks.includes(actor)) {
+      msg.acks.push(actor);
+      saveState();
+      renderMessages();
+      showToast('تم تسجيل تأكيد الاستلام');
+    }
+  }
+
+  function addReply(id) {
+    const input = document.getElementById('reply-input-' + id);
+    const val = input.value.trim();
+    if (!val) return;
+    const msg = state.messages.find(m => m.id === id);
+    const actor = state.role === 'supervisor' ? 'مشرف المختبر' : state.currentStaffName;
+    msg.replies.push({ author: actor, text: val });
+    saveState();
+    renderMessages();
+  }
+
+  function renderMessages() {
+    const container = document.getElementById('messagesList');
+    const list = currentMsgFilter === 'all'
+      ? state.messages
+      : state.messages.filter(m => m.type === currentMsgFilter);
+
+    if (!list.length) {
+      container.innerHTML = '<p style="color:var(--muted); text-align:center;">لا توجد رسائل في هذا التصنيف.</p>';
+      return;
+    }
+
+    container.innerHTML = list.map(m => {
+      const badgeClass = m.type === 'urgent' ? 'badge-urgent' : (m.type === 'shift' ? 'badge-shift' : 'badge-normal');
+      const badgeLabel = m.type === 'urgent' ? 'عاجل 🚨' : (m.type === 'shift' ? 'مناوبة 🔄' : 'تعميم');
+      return `
+        <div class="msg-item ${m.type}">
+          <div class="msg-meta">
+            <span><strong>${m.sender}</strong> ➔ ${m.target}</span>
+            <span><span class="badge ${badgeClass}">${badgeLabel}</span> • ${m.time}</span>
+          </div>
+          <div class="msg-body">${m.text}</div>
+          <div style="display:flex; gap:6px; flex-wrap:wrap; align-items:center;">
+            <button class="btn btn-outline btn-sm" onclick="toggleAck(${m.id})">✅ تأكيد الاستلام (${m.acks.length})</button>
+            <input type="text" id="reply-input-${m.id}" placeholder="اكتب رداً سريعاً..." style="flex:1; min-width:140px; padding:6px 10px; font-size:0.8rem;" />
+            <button class="btn btn-primary btn-sm" onclick="addReply(${m.id})">رد</button>
+          </div>
+          ${m.acks.length ? `<div class="ack-list"><span>تم الاطلاع:</span> ${m.acks.map(a => `<span class="ack-pill">✓ ${a}</span>`).join('')}</div>` : ''}
+          ${m.replies.length ? `<div class="replies-box">${m.replies.map(r => `<div class="reply-line"><strong>${r.author}:</strong> ${r.text}</div>`).join('')}</div>` : ''}
+        </div>
+      `;
+    }).join('');
+  }
+
+  // Bookings
+  function addBooking() {
+    const patient = document.getElementById('bPatient').value.trim();
+    const phone = document.getElementById('bPhone').value.trim();
+    const address = document.getElementById('bAddress').value.trim();
+    const tests = document.getElementById('bTests').value.trim();
+    const date = document.getElementById('bDate').value || new Date().toISOString().split('T')[0];
+    const time = document.getElementById('bTime').value;
+    const fasting = document.getElementById('bFasting').value;
+
+    if (!patient || !phone || !address || !tests) {
+      return showToast('يرجى تعبئة الحقول الأساسية (*)');
+    }
+
+    state.bookings.unshift({
+      id: Math.floor(100 + Math.random() * 900),
+      patient, phone, address, date, time, fasting, tests,
+      status: 'pending',
+      assignee: ''
+    });
+
+    ['bPatient', 'bPhone', 'bAddress', 'bTests'].forEach(id => document.getElementById(id).value = '');
+    saveState();
+    renderBookings();
+    showToast('تم تسجيل طلب السحب المنزلي');
+  }
+
+  function assignBooking(id, staffName) {
+    const b = state.bookings.find(x => x.id === id);
+    b.assignee = staffName;
+    b.status = staffName ? 'assigned' : 'pending';
+    saveState();
+    renderBookings();
+    showToast(staffName ? `تم تعيين الطلب إلى ${staffName}` : 'تم إلغاء التعيين');
+  }
+
+  function completeBooking(id) {
+    const b = state.bookings.find(x => x.id === id);
+    b.status = 'done';
+    saveState();
+    renderBookings();
+    showToast('تم إغلاق الطلب كمكتمل ✅');
+  }
+
+  function filterBookings(filter, el) {
+    currentBookingFilter = filter;
+    el.parentElement.querySelectorAll('.chip').forEach(c => c.classList.remove('active'));
+    el.classList.add('active');
+    renderBookings();
+  }
+
+  function renderBookings() {
+    const container = document.getElementById('bookingsList');
+    const list = currentBookingFilter === 'all'
+      ? state.bookings
+      : state.bookings.filter(b => b.status === currentBookingFilter);
+
+    if (!list.length) {
+      container.innerHTML = '<p style="color:var(--muted); text-align:center;">لا توجد طلبات في هذه القائمة.</p>';
+      return;
+    }
+
+    const staffOptions = state.staff.map(s => `<option value="${s.name}">${s.name}</option>`).join('');
+
+    container.innerHTML = list.map(b => {
+      const statusBadge = b.status === 'pending'
+        ? '<span class="badge badge-pending">قيد الانتظار</span>'
+        : (b.status === 'assigned'
+          ? `<span class="badge badge-assigned">معيّن لـ: ${b.assignee}</span>`
+          : '<span class="badge badge-done">مكتمل ✅</span>');
+
+      return `
+        <div class="booking-card">
+          <div class="booking-top">
+            <div>
+              <h3 class="booking-patient">#${b.id} — ${b.patient}</h3>
+              <span style="font-size:0.8rem; color:var(--muted);">📞 ${b.phone}</span>
+            </div>
+            ${statusBadge}
+          </div>
+          <div class="booking-details">
+            <div>📍 <strong>العنوان:</strong> ${b.address}</div>
+            <div>📅 <strong>الموعد:</strong> ${b.date} | ${b.time}</div>
+            <div>🍽️ <strong>الشرط:</strong> ${b.fasting}</div>
+            <div>🧪 <strong>التحاليل:</strong> ${b.tests}</div>
+          </div>
+          <div class="booking-actions">
+            <select style="width:auto; padding:6px 10px; font-size:0.8rem;" onchange="assignBooking(${b.id}, this.value)">
+              <option value="">-- تعيين مراسل/فني --</option>
+              ${state.staff.map(s => `<option value="${s.name}" ${b.assignee === s.name ? 'selected' : ''}>${s.name}</option>`).join('')}
+            </select>
+            ${b.status !== 'done' ? `<button class="btn btn-primary btn-sm" onclick="completeBooking(${b.id})">✔️ إنهاء السحب</button>` : ''}
+            <button class="btn btn-outline btn-sm" onclick="openReceipt(${b.id})">🖨️ إيصال / ملخص</button>
+          </div>
+        </div>
+      `;
+    }).join('');
+  }
+
+  // Print & Export
+  function openReceipt(id) {
+    const b = state.bookings.find(x => x.id === id);
+    const html = `
+      <div class="receipt-header">
+        <h3 style="margin:0; color:var(--primary-dark);">إيصال طلب سحب دم منزلي</h3>
+        <small style="color:var(--muted);">رقم الطلب: #${b.id} | التاريخ: ${b.date}</small>
+      </div>
+      <div class="receipt-row"><span>اسم المريض:</span><strong>${b.patient}</strong></div>
+      <div class="receipt-row"><span>رقم الجوال:</span><strong>${b.phone}</strong></div>
+      <div class="receipt-row"><span>العنوان:</span><strong>${b.address}</strong></div>
+      <div class="receipt-row"><span>الفترة الزمنية:</span><strong>${b.time}</strong></div>
+      <div class="receipt-row"><span>شروط الصيام:</span><strong>${b.fasting}</strong></div>
+      <div class="receipt-row"><span>الموظف المكلف:</span><strong>${b.assignee || 'لم يحدد بعد'}</strong></div>
+      <div style="margin-top:10px; padding:8px; background:#f8fafc; border-radius:8px; font-size:0.86rem;">
+        <strong>التحاليل المطلوبة:</strong><br/>${b.tests}
+      </div>
+    `;
+    document.getElementById('receiptContent').innerHTML = html;
+
+    const waText = `*طلب سحب دم منزلي #${b.id}*%0A` +
+      `👤 المريض: ${b.patient}%0A` +
+      `📞 الجوال: ${b.phone}%0A` +
+      `📍 العنوان: ${b.address}%0A` +
+      `⏰ الموعد: ${b.date} (${b.time})%0A` +
+      `🧪 التحاليل: ${b.tests}%0A` +
+      `🚗 المراسل المكلف: ${b.assignee || 'غير معين'}`;
+
+    document.getElementById('btnCopyWhatsApp').onclick = () => {
+      navigator.clipboard.writeText(decodeURIComponent(waText));
+      showToast('تم نسخ ملخص الطلب لإرساله عبر واتساب');
+    };
+
+    document.getElementById('receiptModal').classList.add('open');
+  }
+
+  function printDailySchedule() {
+    const rows = state.bookings.map(b => `
+      <tr>
+        <td style="border:1px solid #cbd5e1; padding:6px;">#${b.id}</td>
+        <td style="border:1px solid #cbd5e1; padding:6px;">${b.patient} (${b.phone})</td>
+        <td style="border:1px solid #cbd5e1; padding:6px;">${b.address}</td>
+        <td style="border:1px solid #cbd5e1; padding:6px;">${b.time}</td>
+        <td style="border:1px solid #cbd5e1; padding:6px;">${b.tests}</td>
+        <td style="border:1px solid #cbd5e1; padding:6px;">${b.assignee || '-'}</td>
+      </tr>
+    `).join('');
+
+    document.getElementById('receiptContent').innerHTML = `
+      <div class="receipt-header">
+        <h3 style="margin:0;">كشف زيارات السحب المنزلي</h3>
+        <small>تاريخ الطباعة: ${new Date().toLocaleDateString('ar-EG')}</small>
+      </div>
+      <table style="width:100%; border-collapse:collapse; font-size:0.78rem; text-align:right;">
+        <thead>
+          <tr style="background:#f1f5f9;">
+            <th style="border:1px solid #cbd5e1; padding:6px;">#</th>
+            <th style="border:1px solid #cbd5e1; padding:6px;">المريض</th>
+            <th style="border:1px solid #cbd5e1; padding:6px;">العنوان</th>
+            <th style="border:1px solid #cbd5e1; padding:6px;">الموعد</th>
+            <th style="border:1px solid #cbd5e1; padding:6px;">التحاليل</th>
+            <th style="border:1px solid #cbd5e1; padding:6px;">المراسل</th>
+          </tr>
+        </thead>
+        <tbody>${rows}</tbody>
+      </table>
+    `;
+    document.getElementById('receiptModal').classList.add('open');
+  }
+
+  function exportBookingsCSV() {
+    const headers = ['رقم الطلب', 'اسم المريض', 'الجوال', 'العنوان', 'التاريخ', 'الفترة', 'الصيام', 'التحاليل', 'الحالة', 'الموظف المكلف'];
+    const lines = [headers.join(',')];
+    state.bookings.forEach(b => {
+      const row = [b.id, b.patient, b.phone, b.address, b.date, b.time, b.fasting, b.tests, b.status, b.assignee]
+        .map(v => `"${String(v || '').replace(/"/g, '""')}"`);
+      lines.push(row.join(','));
+    });
+    const blob = new Blob(['﻿' + lines.join('
+')], { type: 'text/csv;charset=utf-8;' });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = `home_blood_draws_${new Date().toISOString().split('T')[0]}.csv`;
+    a.click();
+    showToast('تم تصدير ملف CSV بنجاح');
+  }
+
+  function closeModal() {
+    document.getElementById('receiptModal').classList.remove('open');
+  }
+
+  // Staff & Ideas
+  function cycleStaffStatus(id) {
+    const s = state.staff.find(x => x.id === id);
+    const order = ['online', 'field', 'off'];
+    s.status = order[(order.indexOf(s.status) + 1) % order.length];
+    saveState();
+    renderStaff();
+  }
+
+  function renderStaff() {
+    const labels = {
+      online: { text: 'متواجد بالمختبر', dot: 'dot-online' },
+      field: { text: 'في جولة سحب منزلي', dot: 'dot-field' },
+      off: { text: 'خارج الدوام', dot: 'dot-off' }
+    };
+    document.getElementById('staffList').innerHTML = state.staff.map(s => `
+      <div class="staff-row">
+        <div>
+          <strong>${s.name}</strong>
+          <div style="font-size:0.78rem; color:var(--muted);">${s.role}</div>
+        </div>
+        <button class="btn btn-outline btn-sm" onclick="cycleStaffStatus(${s.id})">
+          <span class="status-dot ${labels[s.status].dot}"></span>
+          ${labels[s.status].text}
+        </button>
+      </div>
+    `).join('');
+  }
+
+  function addIdea() {
+    const input = document.getElementById('ideaInput');
+    if (!input.value.trim()) return;
+    state.ideas.unshift(input.value.trim());
+    input.value = '';
+    saveState();
+    renderIdeas();
+    showToast('تمت إضافة الفكرة للقائمة');
+  }
+
+  function renderIdeas() {
+    document.getElementById('ideasList').innerHTML = state.ideas.map((idea, idx) => `
+      <div class="staff-row" style="background:#f8fafc;">
+        <span style="font-size:0.86rem;">💡 ${idea}</span>
+        <button class="btn btn-outline btn-sm" onclick="state.ideas.splice(${idx},1); saveState(); renderIdeas();">حذف</button>
+      </div>
+    `).join('');
+  }
+
+  function renderAll() {
+    updateStats();
+    renderMessages();
+    renderBookings();
+    renderStaff();
+    renderIdeas();
+  }
+
+  document.getElementById('bDate').value = new Date().toISOString().split('T')[0];
+  renderAll();
+</script>
+</body>
+</html>
